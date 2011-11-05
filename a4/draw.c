@@ -98,6 +98,43 @@ void draw3D() {
         glPopMatrix();
     }
 	
+    
+	glPushMatrix(); {
+	    GLUquadricObj *sphere;
+        double radius  = 1;
+        int slices  = 16;
+        int stacks  = 8;
+	    
+	    glTranslatef(0.0f, 10.0f, 0.0f);
+	    
+	    glRotatef(-23.0f, 0.0f, 0.0f, 1.0f);
+	    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+	    
+	    
+	    /*
+	    glRotatef(90.0f - 23.0f, 1.0f, 0.0f, 0.0f);
+	    glRotatef(angle, 0.0f, 0.0f, 1.0f);
+	    */
+	    
+        glDisable(GL_LIGHTING);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        sphere = gluNewQuadric();
+        glColor3f(1.0f, 1.0f, 1.0f);
+        gluQuadricDrawStyle(sphere, GLU_FILL);
+        gluQuadricNormals(sphere, GL_SMOOTH);
+        gluSphere(sphere, radius, slices, stacks);
+        gluDeleteQuadric(sphere);
+        
+        glBegin(GL_LINES);
+            glColor3f(1.0f, 1.0f, 1.0f);
+            glVertex3f(0, 0, -5);
+            glVertex3f(0, 0, 5);
+        glEnd();
+        glEnable(GL_LIGHTING);
+	    
+	} glPopMatrix();
+	
 	// Draw Quad
 	/*
 	glPushMatrix();
@@ -183,7 +220,7 @@ void drawMoon(float distanceToSun) {
 	int stacks  = 8;
 	
     glPushMatrix();
-        glTranslatef(sin(M_PI * sunsystem[PLANET_EARTH].angle / 180.0f) * distanceToSun, 0.0f, cos(M_PI * sunsystem[PLANET_EARTH].angle / 180.0f) * distanceToSun);
+        glTranslatef(cos(M_PI * sunsystem[PLANET_EARTH].angle / 180.0f) * distanceToSun, 0.0f, sin(M_PI * sunsystem[PLANET_EARTH].angle / 180.0f) * distanceToSun);
         glRotatef(2 * angle, 0, 1, 0);
         glTranslatef(7.0f, 0.0f, 0.0f);
 	    drawSphere(color, radius, slices, stacks, PLANET_MOON);
@@ -198,7 +235,7 @@ void drawPlanet(float distanceToSun, float axisTilt, float years, float dayPerYe
 	
     //glTranslatef(0.0f, 0.0f, distanceToSun);
     glPushMatrix();
-        glTranslatef(sin(M_PI * sunsystem[texNumber].angle / 180.0f) * distanceToSun, 0.0f, cos(M_PI * sunsystem[texNumber].angle / 180.0f) * distanceToSun);
+        glTranslatef(cos(M_PI * sunsystem[texNumber].angle / 180.0f) * distanceToSun, 0.0f, sin(M_PI * sunsystem[texNumber].angle / 180.0f) * distanceToSun);
         glRotatef(-axisTilt, 1, 0, 0);
         drawSphere(color, radius, slices, stacks, texNumber);
         
