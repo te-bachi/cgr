@@ -46,6 +46,7 @@ void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, SDL_Rect *lo
     /* prepare to render our texture */
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glColor3f(1.0f, 1.0f, 1.0f);
     
     /* Draw a quad at location */

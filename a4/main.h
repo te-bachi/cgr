@@ -49,10 +49,10 @@ struct KeyFlag {
 	bool pageDown;
 };
 
-typedef struct _Planet {
-    float angle;
-    float speed;
-} Planet;
+enum ObjectType {
+    TYPE_PLANET = 0,
+    TYPE_RING
+};
 
 enum PlanetEnum {
     PLANET_CLOUDS = 0,
@@ -72,6 +72,37 @@ enum PlanetEnum {
     PLANET_COUNT
 };
 
+typedef struct _Planet Planet;
+typedef struct _Ring Ring;
+
+typedef struct _Planet {
+    int     id;
+    float   radius;
+    float   distanceToSun;
+    float   axisTilt;
+    float   angle;
+    float   speed;
+    float   twist;
+    float   twistPerAngle;
+    Planet *moon;
+    Ring   *ring;
+} Planet;
+
+typedef struct _Ring {
+    int     id;
+    float   radiusIn;
+    float   radiusOut;
+} Ring;
+
+
+typedef struct _Object {
+    ObjectType type;
+    union {
+        Planet planet;
+        Ring   ring;
+    };
+} Object;
+
 /**************************************************/
 /* Variable definition                            */
 /**************************************************/
@@ -80,7 +111,7 @@ extern bool shipCamera;
 extern bool gridEnable;
 extern bool pause;
 
-extern Planet sunsystem[PLANET_COUNT];
+extern Object sunsystem[PLANET_COUNT];
 
 extern TTF_Font* font;
 
@@ -92,7 +123,6 @@ void quit_program(int code);
 void process_events();
 bool init_OpenGL();
 bool init_SDL();
-bool init_Sunsystem();
 int main(int argc, char* argv[]);
 
 #endif
