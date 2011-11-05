@@ -21,6 +21,8 @@
 /* Variable definition                            */
 /**************************************************/
 
+char fontpath[] = "Fonts/ANTQUAB.TTF";
+
 KeyFlag keyFlag;                                    // Placeholder for pressed keys
 int width = 1024;                                   // Dimensions of our window
 int height = 768;
@@ -29,6 +31,10 @@ bool fullscreen = false;                                // Fullscreen or windowe
 bool shipCamera = false;
 bool gridEnable = false;
 bool pause = false;
+
+Planet sunsystem[PLANET_COUNT];
+
+TTF_Font* font;
 
 /**************************************************/
 /* Exit                                           */
@@ -178,19 +184,19 @@ void process_events() {
 /* Init OpenGL                                    */
 /* Returnvalue: true if init was successful       */
 /**************************************************/
-GLfloat GlobalAmbient[]	= { 0.2f, 0.2f, 0.2f, 1.2f };
+GLfloat GlobalAmbient[] = { 0.2f, 0.2f, 0.2f, 1.2f };
 
-GLfloat LightAmbient[]	= { 0.1f, 0.1f, 0.1f, 1.0f };
-GLfloat LightDiffuse[]	= { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat LightAmbient[]  = { 0.1f, 0.1f, 0.1f, 1.0f };
+GLfloat LightDiffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat LightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 //GLfloat LightPosition[] = { 0.0f, 0.0f, 20.0f, 1.0f };
 //GLfloat LightDirection[] = { 15.0f, 0.0f, 0.0f, 1.0f };
 
-GLfloat MaterialSpecular[]	= { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat MaterialSpecular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat MaterialShininess[] = { 50.0f };
-GLfloat MaterialAmbient[]	= { 0.4f, 0.4f, 0.4f, 1.0f };
-GLfloat MaterialDiffuse[]	= { 0.4f, 0.8f, 0.4f, 1.0f };
+GLfloat MaterialAmbient[]   = { 0.4f, 0.4f, 0.4f, 1.0f };
+GLfloat MaterialDiffuse[]   = { 0.4f, 0.8f, 0.4f, 1.0f };
 
 bool init_OpenGL( ) {   
     
@@ -205,33 +211,44 @@ bool init_OpenGL( ) {
     
     glEnable(GL_DEPTH_TEST);                        // Enable hidden surface removal
     
-	// Ambient Ligth
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbient);
+    // Ambient Ligth
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbient);
+    
+    // Light0
+    glLightfv( GL_LIGHT0, GL_AMBIENT, LightAmbient );
+    glLightfv( GL_LIGHT0, GL_DIFFUSE, LightDiffuse );
+    glLightfv( GL_LIGHT0, GL_SPECULAR, LightSpecular );
+    
+    // Spot
+    //glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, LightDirection);
+    //glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 10.0);
+    //glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 150.0);
+    
+    // Material
+    glMaterialfv(GL_FRONT, GL_SPECULAR,  MaterialSpecular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, MaterialShininess);
+    glMaterialfv(GL_FRONT, GL_AMBIENT,   MaterialAmbient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,   MaterialDiffuse);
+    
+    // Texture
+    loadTextures();
+    
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    
+    
+	/* Irrelevant stuff for this demo */
+	glShadeModel(GL_SMOOTH);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0f);
+	glDepthFunc(GL_LEQUAL);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
-	// Light0
-	glLightfv( GL_LIGHT0, GL_AMBIENT, LightAmbient );
-	glLightfv( GL_LIGHT0, GL_DIFFUSE, LightDiffuse );
-	glLightfv( GL_LIGHT0, GL_SPECULAR, LightSpecular );
-	
-	// Spot
-	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, LightDirection);
-	//glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 10.0);
-	//glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 150.0);
-	
-	// Material
-	glMaterialfv(GL_FRONT, GL_SPECULAR,	 MaterialSpecular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, MaterialShininess);
-	glMaterialfv(GL_FRONT, GL_AMBIENT,	 MaterialAmbient);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE,	 MaterialDiffuse);
-	
-	// Texture
-	loadTextures();
-	
-	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_TEXTURE_2D);
-	
+	/* Required if you want alpha-blended textures (for our fonts) */
+	glBlendFunc(GL_ONE, GL_ONE);
+    
     return true;
     
 }
@@ -278,13 +295,33 @@ bool init_SDL()
         flags = flags | SDL_FULLSCREEN;             // Set flag for fullscreen or windowed mode
     }
     
-    if( SDL_SetVideoMode( width, height, bpp, flags ) == 0 )    // Set the video mode
-    {
-        fprintf( stderr, "Video mode set failed: %s\n", SDL_GetError( ) );
+    if(SDL_SetVideoMode(width, height, bpp, flags) == 0) {
+        fprintf(stderr, "Video mode set failed: %s\n", SDL_GetError());
         return false;
     }
     
+    if(TTF_Init()) {
+        fprintf(stderr, "TTF init failed: %s\n", TTF_GetError());
+        return false;
+    }
+    
+	if(!(font = TTF_OpenFont(fontpath, 20))) {
+		printf("Error loading font: %s", TTF_GetError());
+		return 1;
+	}
+	
     return true;
+}
+
+bool init_Sunsystem() {
+    sunsystem[PLANET_MERCURY].angle = 45.0f;
+    sunsystem[PLANET_MERCURY].speed = 24.0f;
+    
+    sunsystem[PLANET_VENUS].angle = 90.0f;
+    sunsystem[PLANET_VENUS].speed = 36.0f;
+    
+    sunsystem[PLANET_EARTH].angle = 0.0f;
+    sunsystem[PLANET_EARTH].speed = 30.0f;
 }
 
 /**************************************************/
@@ -303,6 +340,8 @@ int main( int argc, char* argv[] )
     {
         quit_program( 1 );
     }
+    
+    init_Sunsystem();
     
     while(true)                     // Repeat forever
     {

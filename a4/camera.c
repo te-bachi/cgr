@@ -13,7 +13,7 @@ void camera() {
     if (initCamera){                                    // Only on the fist loop
         glPushMatrix();
         glLoadIdentity();                               // load identity matrix 
-        gluLookAt(20, 20, 20, 0, 0, 0, 0, 1, 0);
+        gluLookAt(100, 100, 100, 0, 0, 0, 0, 1, 0);
         //gluLookAt(20, 20, 0, 0, 0, 0, 0, 1, 0);
         glGetFloatv(GL_MODELVIEW_MATRIX, cam_matrix);   // save
         glPopMatrix();

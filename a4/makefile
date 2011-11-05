@@ -3,10 +3,11 @@ SOURCES = main.c \
           draw.c \
           camera.c \
           utils.c \
-          createTexture.c
+          createTexture.c \
+          text.c
 
 CFLAGS  = `sdl-config --cflags` -D_REENTRANT -Wall
-LDFLAGS = `sdl-config --libs` -lopengl32 -lglu32
+LDFLAGS = `sdl-config --libs` -lopengl32 -lglu32 -lSDL_ttf
 
 OBJECTS = $(SOURCES:%.c=%.o)
 

@@ -1,23 +1,23 @@
-#include "main.h"
+
 #include "createTexture.h"
 
-GLuint textures[TEXTURE_COUNT] = {0};
+GLuint textures[PLANET_COUNT] = {0};
 
 void loadTextures() {
-    createTexture(textures, TEXTURE_PATH "Clouds.bmp",      TEXTURE_CLOUDS);
-    createTexture(textures, TEXTURE_PATH "Earth.bmp",       TEXTURE_EARTH);
-    createTexture(textures, TEXTURE_PATH "Jupiter.bmp",     TEXTURE_JUPITER);
-    createTexture(textures, TEXTURE_PATH "Mars.bmp",        TEXTURE_MARS);
-    createTexture(textures, TEXTURE_PATH "Mercury.bmp",     TEXTURE_MERCURY);
-    createTexture(textures, TEXTURE_PATH "Moon.bmp",        TEXTURE_MOON);
-    createTexture(textures, TEXTURE_PATH "Neptune.bmp",     TEXTURE_NEPTUNE);
-    createTexture(textures, TEXTURE_PATH "Pluto.bmp",       TEXTURE_PLUTO);
-    createTexture(textures, TEXTURE_PATH "Saturn.bmp",      TEXTURE_SATURN);
-    createTexture(textures, TEXTURE_PATH "Saturnring.bmp",  TEXTURE_SATURNRING);
-    createTexture(textures, TEXTURE_PATH "Sun.bmp",         TEXTURE_SUN);
-    createTexture(textures, TEXTURE_PATH "Titan.bmp",       TEXTURE_TITAN);
-    createTexture(textures, TEXTURE_PATH "Uranus.bmp",      TEXTURE_URANUS);
-    createTexture(textures, TEXTURE_PATH "Venus.bmp",       TEXTURE_VENUS);
+    createTexture(textures, TEXTURE_PATH "Clouds.bmp",      PLANET_CLOUDS);
+    createTexture(textures, TEXTURE_PATH "Earth.bmp",       PLANET_EARTH);
+    createTexture(textures, TEXTURE_PATH "Jupiter.bmp",     PLANET_JUPITER);
+    createTexture(textures, TEXTURE_PATH "Mars.bmp",        PLANET_MARS);
+    createTexture(textures, TEXTURE_PATH "Mercury.bmp",     PLANET_MERCURY);
+    createTexture(textures, TEXTURE_PATH "Moon.bmp",        PLANET_MOON);
+    createTexture(textures, TEXTURE_PATH "Neptune.bmp",     PLANET_NEPTUNE);
+    createTexture(textures, TEXTURE_PATH "Pluto.bmp",       PLANET_PLUTO);
+    createTexture(textures, TEXTURE_PATH "Saturn.bmp",      PLANET_SATURN);
+    createTexture(textures, TEXTURE_PATH "Saturnring.bmp",  PLANET_SATURNRING);
+    createTexture(textures, TEXTURE_PATH "Sun.bmp",         PLANET_SUN);
+    createTexture(textures, TEXTURE_PATH "Titan.bmp",       PLANET_TITAN);
+    createTexture(textures, TEXTURE_PATH "Uranus.bmp",      PLANET_URANUS);
+    createTexture(textures, TEXTURE_PATH "Venus.bmp",       PLANET_VENUS);
     
     glMatrixMode(GL_TEXTURE);
         glLoadIdentity();

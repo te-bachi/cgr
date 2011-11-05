@@ -32,6 +32,7 @@
 #include <math.h>
 #include <SDL_syswm.h> 
 #include <SDL_byteorder.h> 
+#include <SDL_ttf.h>
  
 using namespace std;
 
@@ -46,7 +47,30 @@ struct KeyFlag {
 	bool down;
 	bool pageUp;
 	bool pageDown;
-} ;
+};
+
+typedef struct _Planet {
+    float angle;
+    float speed;
+} Planet;
+
+enum PlanetEnum {
+    PLANET_CLOUDS = 0,
+    PLANET_EARTH,
+    PLANET_JUPITER,
+    PLANET_MARS,
+    PLANET_MERCURY,
+    PLANET_MOON,
+    PLANET_NEPTUNE,
+    PLANET_PLUTO,
+    PLANET_SATURN,
+    PLANET_SATURNRING,
+    PLANET_SUN,
+    PLANET_TITAN,
+    PLANET_URANUS,
+    PLANET_VENUS,
+    PLANET_COUNT
+};
 
 /**************************************************/
 /* Variable definition                            */
@@ -56,18 +80,19 @@ extern bool shipCamera;
 extern bool gridEnable;
 extern bool pause;
 
+extern Planet sunsystem[PLANET_COUNT];
+
+extern TTF_Font* font;
+
 /**************************************************/
 /* Function definition                            */
 /**************************************************/
 
-void quit_program( int code );						// Quit program
-
-void process_events( );								// Process keyevents
-
-bool init_OpenGL( );								// Init OpenGL
-
-bool init_SDL();									// Init SDL Engine
-
-int main( int argc, char* argv[] );					// Main
+void quit_program(int code);
+void process_events();
+bool init_OpenGL();
+bool init_SDL();
+bool init_Sunsystem();
+int main(int argc, char* argv[]);
 
 #endif
