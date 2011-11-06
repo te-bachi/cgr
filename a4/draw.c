@@ -90,7 +90,6 @@ void draw3D() {
         glPopMatrix();
     }
 	
-    /*
 	glPushMatrix(); {
 	    GLUquadricObj *sphere;
         double radius  = 1;
@@ -118,7 +117,7 @@ void draw3D() {
         glEnable(GL_LIGHTING);
 	    
 	} glPopMatrix();
-    */
+    
     
     /*
 	glPushMatrix(); {
@@ -151,20 +150,6 @@ void draw3D() {
 	} glPopMatrix();
 	*/
 	
-	// Draw Quad
-	/*
-	glPushMatrix();
-		glTranslatef(0.0f, -5.0f, 0.0f);
-	    glBegin(GL_QUADS);
-	        glColor3ub(255, 255, 255);
-			glVertex3f( 3, 0,  3);
-			glVertex3f(-3, 0,  3);
-			glVertex3f(-3, 0, -3);
-			glVertex3f( 3, 0, -3);
-	    glEnd();
-	glPopMatrix();
-	*/
-	
 	{
         SDL_Color color;
         SDL_Rect position;
@@ -175,12 +160,12 @@ void draw3D() {
         
         position.x = 10;
         position.y = 0;
-        sprintf(buffer, "Earth: %f / %f", sunsystem[PLANET_EARTH].planet.angle, sunsystem[PLANET_EARTH].planet.speed);
+        sprintf(buffer, "MERCURY: %f / %f", sunsystem[PLANET_MERCURY].planet.twist, sunsystem[PLANET_MERCURY].planet.twistPerAngle);
         SDL_GL_RenderText(buffer, font, color, &position);
         
         position.x = 10;
         position.y = 25;
-        sprintf(buffer, "Venus: %f / %f", sunsystem[PLANET_VENUS].planet.angle, sunsystem[PLANET_VENUS].planet.speed);
+        sprintf(buffer, "VENUS: %f / %f", sunsystem[PLANET_VENUS].planet.twist, sunsystem[PLANET_VENUS].planet.twistPerAngle);
         SDL_GL_RenderText(buffer, font, color, &position);
         
         position.x = 10;
@@ -205,10 +190,10 @@ void incAnimationVars() {
             if (sunsystem[i].type == TYPE_PLANET) {
                 if (fps > 0 && fps < 300) {
                     sunsystem[i].planet.angle += sunsystem[i].planet.speed / fps;
-                    sunsystem[i].planet.twist += sunsystem[i].planet.twistPerAngle / fps;
+                    sunsystem[i].planet.twist += sunsystem[i].planet.angle * sunsystem[i].planet.twistPerAngle / fps;
                 } else {
                     sunsystem[i].planet.angle += sunsystem[i].planet.speed;
-                    sunsystem[i].planet.twist += sunsystem[i].planet.twistPerAngle;
+                    sunsystem[i].planet.twist += sunsystem[i].planet.angle * sunsystem[i].planet.twistPerAngle;
                 }
                 
                 if (sunsystem[i].planet.angle > 360.0f) {
@@ -231,7 +216,7 @@ void drawSun() {
 	
 	glPushMatrix();
         glPolygonMode(GL_BACK, GL_FILL);
-        glDisable(GL_LIGHTING);
+        
         drawSphere(color, radius, slices, stacks, PLANET_SUN);
         glEnable(GL_LIGHTING);
 	glPopMatrix();
@@ -259,12 +244,13 @@ void drawPlanet(int id) {
 	
 	Planet *planet = &(sunsystem[id].planet);
 	
-    //glTranslatef(0.0f, 0.0f, distanceToSun);
+	if (!planet->ligthing) {
+	    glDisable(GL_LIGHTING);
+	}
+	
     glPushMatrix();
         glTranslatef(cos(M_PI * planet->angle / 180.0f) * planet->distanceToSun, 0.0f, sin(M_PI * planet->angle / 180.0f) * planet->distanceToSun);
-        glRotatef(planet->axisTilt, 1, 0, 0);
-        
-        glRotatef(90.0f, 1, 0, 0);
+        glRotatef(90.0f - planet->axisTilt, 1, 0, 0);
         glRotatef(planet->twist, 0, 0, 1);
         
         // Line
@@ -302,7 +288,11 @@ void drawPlanet(int id) {
             glEnd();
             glEnable(GL_LIGHTING);
         }
-        
+    
+	if (!planet->ligthing) {
+	    glEnable(GL_LIGHTING);
+	}
+	
     glPopMatrix();
 }
 

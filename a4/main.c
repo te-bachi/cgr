@@ -315,7 +315,7 @@ bool init_SDL()
 
 void init_Planet(int id, float radius, float distanceToSun, float axisTilt,
                  float angle, float speed, float twist, float twistPerAngle,
-                 Planet *moon, Ring *ring) {
+                 bool ligthing, Planet *moon, Ring *ring) {
 
     //
     sunsystem[id].type                 = TYPE_PLANET;
@@ -327,6 +327,7 @@ void init_Planet(int id, float radius, float distanceToSun, float axisTilt,
     sunsystem[id].planet.speed         = speed;
     sunsystem[id].planet.twist         = twist;
     sunsystem[id].planet.twistPerAngle = twistPerAngle;
+    sunsystem[id].planet.ligthing      = ligthing;
     sunsystem[id].planet.moon          = moon;
     sunsystem[id].planet.ring          = ring;
 }
@@ -342,35 +343,33 @@ void init_Sunsystem() {
     
     // Pre-Init
     
-    init_Planet(PLANET_SUN, 5.0f, 0.0f, 30.0f,
-                0.0f, 0.0f, 0.0f, 90.0f, NULL, NULL);
+    init_Planet(PLANET_MOON, 1.0f, 0.0f, 45.0f,
+                0.0f, 0.0f, 0.0f, 90.0f, false, NULL, NULL);
     
     init_Ring(PLANET_SATURNRING, 2.0f, 6.0f);
     
     // Init
     
+    init_Planet(PLANET_SUN, 5.0f, 0.0f, 30.0f,
+                0.0f, 1.0f, 0.0f, 1.0f, false, NULL, NULL);
     init_Planet(PLANET_MERCURY, 2.0f, 10.0f, 0.0f,
-                45.0f, 24.0f, 0.0f, 90.0f, NULL, NULL);
-    
-    init_Planet(PLANET_MERCURY, 2.0f, 10.0f, 0.0f,
-                45.0f, 24.0f, 0.0f, 90.0f, NULL, NULL);
+                0.0f, 24.0f, 90.0f, 1.0f, true, NULL, &(sunsystem[PLANET_SATURNRING].ring));
     init_Planet(PLANET_VENUS, 4.0f, 20.0f, 0.0f,
-                90.0f, 20.0f, 0.0f, 20.0f, NULL, NULL);
+                0.0f, 20.0f, 0.0f, 1.0f, true, NULL, NULL);
     init_Planet(PLANET_EARTH, 2.0f, 30.0f, 23.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, &(sunsystem[PLANET_MOON].planet), NULL);
+                0.0f, 30.0f, 0.0f, 1.0f, true, &(sunsystem[PLANET_MOON].planet), NULL);
     init_Planet(PLANET_MARS, 3.0f, 40.0f, 23.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, NULL, NULL);
-    
+                0.0f, 30.0f, 0.0f, 1.0f, true, NULL, NULL);
     init_Planet(PLANET_JUPITER, 3.0f, 50.0f, 0.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, NULL, NULL);
+                0.0f, 30.0f, 0.0f, 1.0f, true, NULL, NULL);
     init_Planet(PLANET_SATURN, 3.0f, 60.0f, 0.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, NULL, NULL);
+                0.0f, 30.0f, 0.0f, 1.0f, true, NULL, NULL);
     init_Planet(PLANET_URANUS, 3.0f, 70.0f, 0.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, NULL, NULL);
+                0.0f, 30.0f, 0.0f, 1.0f, true, NULL, NULL);
     init_Planet(PLANET_NEPTUNE, 3.0f, 80.0f, 0.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, NULL, NULL);
+                0.0f, 30.0f, 0.0f, 1.0f, true, NULL, NULL);
     init_Planet(PLANET_PLUTO, 3.0f, 90.0f, 0.0f,
-                0.0f, 30.0f, 0.0f, 20.0f, NULL, NULL);
+                0.0f, 30.0f, 0.0f, 1.0f, true, NULL, NULL);
     
     /*
     

@@ -84,6 +84,7 @@ typedef struct _Planet {
     float   speed;
     float   twist;
     float   twistPerAngle;
+    bool    ligthing;
     Planet *moon;
     Ring   *ring;
 } Planet;
